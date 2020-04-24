@@ -17,9 +17,9 @@ To use this library, clone this repository and source `tidy.sh` in
 your shell script. Three functions should now be available in your
 script:
 
-  * `push_sig_handler`
-  * `pop_sig_handler`
-  * `cancel_sig_handler`
+  * `tidy_push`
+  * `tidy_pop`
+  * `tidy_cancel`
 
 These functions are documented in the source code of the library.
 

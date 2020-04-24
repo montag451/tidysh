@@ -20,7 +20,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Private
-_pop_sig_handler()
+_tidy_pop()
 {
     local ret=0 nb_handlers handler
     eval "nb_handlers=\${_NB_${1}_HANDLERS_${2}:-0}"
@@ -37,12 +37,12 @@ _pop_sig_handler()
 }
 
 # Private
-_exec_sig_handlers()
+_tidy_exec()
 {
     local pid nb_handlers ret results
     eval "nb_handlers=\${_NB_${1}_HANDLERS_${2}:-0}"
     while [ "${nb_handlers}" -gt 0 -a "${nb_handlers}" -gt "${3}" ]; do
-        _pop_sig_handler "${1}" "${2}" 1 && ret="${?}" || ret="${?}"
+        _tidy_pop "${1}" "${2}" 1 && ret="${?}" || ret="${?}"
         results="${results:+${results} }${ret}"
         nb_handlers=$((nb_handlers-1))
     done
@@ -50,7 +50,7 @@ _exec_sig_handlers()
 }
 
 # Private
-_get_shell_pid()
+_tidy_get_shell_pid()
 {
     # It's not possible to use $$ because subshell share this value with
     # their parent shell
@@ -62,11 +62,11 @@ _get_shell_pid()
 # $1: signal (e.g INT, TERM, EXIT, ERR, ...)
 # $2: handler
 # $3: (optional) a variable name where the handler ID will be saved
-push_sig_handler()
+tidy_push()
 {
     local pid nb_handlers
-    _get_shell_pid pid
-    trap "_exec_sig_handlers ${1} ${pid} 0" "${1}" || return 1
+    _tidy_get_shell_pid pid
+    trap "_tidy_exec ${1} ${pid} 0" "${1}" || return 1
     eval "nb_handlers=\${_NB_${1}_HANDLERS_${pid}:-0}"
     eval "_${1}_HANDLERS_${pid}_${nb_handlers}=\${2}"
     eval "_NB_${1}_HANDLERS_${pid}=$((nb_handlers+1))"
@@ -77,11 +77,11 @@ push_sig_handler()
 # $1: signal (e.g INT, TERM, EXIT, ERR, ...)
 # $2: (optional, default: 0) 0 or 1 (if 1 the handler is popped and executed)
 # Return: handler exit code
-pop_sig_handler()
+tidy_pop()
 {
     local pid
-    _get_shell_pid pid
-    _pop_sig_handler "${1}" "${pid}" "${2:-0}"
+    _tidy_get_shell_pid pid
+    _tidy_pop "${1}" "${pid}" "${2:-0}"
     return "${?}"
 }
 
@@ -90,10 +90,10 @@ pop_sig_handler()
 # $1: signal (e.g INT, TERM, EXIT, ERR, ...)
 # $2: handler ID
 # $3: (optional) a variable name where the results of executed handlers will be saved
-cancel_sig_handler()
+tidy_cancel()
 {
     local pid
-    _get_shell_pid pid
-    _exec_sig_handlers "${1}" "${pid}" "${2}" "${3}"
-    _pop_sig_handler "${1}" "${pid}" 0
+    _tidy_get_shell_pid pid
+    _tidy_exec "${1}" "${pid}" "${2}" "${3}"
+    _tidy_pop "${1}" "${pid}" 0
 }

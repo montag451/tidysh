@@ -7,13 +7,13 @@ set -e
 . "$(dirname "$0")/../tidy.sh"
 
 # Install a handler to say bye when the script finishes
-push_sig_handler EXIT "echo 'Bye!'"
+tidy_push EXIT "echo 'Bye!'"
 
 INSTALL_DIR=$(mktemp -d)
 # We install a handler to remove the install dir if something goes
 # wrong during the installation, the handler will be cancelled at the
 # end of the install procedure if installation was successful.
-push_sig_handler\
+tidy_push\
     EXIT\
     "echo 'Something has gone wrong'; rm -rf '${INSTALL_DIR}'"\
     HANDLER_ID
@@ -22,7 +22,7 @@ push_sig_handler\
 TMP_DIR=$(mktemp -d)
 # Install a handler to cleanup the temporary directory at the end of
 # the script no matter the outcome of the installation procedure
-push_sig_handler EXIT "echo 'Clean up the mess'; rm -rf '${TMP_DIR}'"
+tidy_push EXIT "echo 'Clean up the mess'; rm -rf '${TMP_DIR}'"
 
 # Do more stuff (more signal handlers may be installed)...
 
@@ -32,7 +32,7 @@ push_sig_handler EXIT "echo 'Clean up the mess'; rm -rf '${TMP_DIR}'"
 
 # If we reach this point it means that everything was fine, cancel the
 # handler
-cancel_sig_handler EXIT "${HANDLER_ID}"
+tidy_cancel EXIT "${HANDLER_ID}"
 
 # Inform user that everything is OK
 echo "\
