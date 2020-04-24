@@ -73,13 +73,13 @@ push_sig_handler()
 
 # Pop the last signal handler from the handlers stack.
 # $1: signal (e.g INT, TERM, EXIT, ERR, ...)
-# $2: 0 or 1 (if set to 1 the handler will be popped and executed)
+# $2: (optional, default: 0) 0 or 1 (if 1 the handler is popped and executed)
 # Return: handler exit code
 pop_sig_handler()
 {
     local pid
     _get_shell_pid pid
-    _pop_sig_handler "${1}" "${pid}" "${2}"
+    _pop_sig_handler "${1}" "${pid}" "${2:-0}"
     return "${?}"
 }
 
