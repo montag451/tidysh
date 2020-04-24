@@ -2,7 +2,7 @@
 
 set -e
 
-. "$(dirname '$0')/tidy.sh"
+. "$(dirname "$0")/tidy.sh"
 
 push_sig_handler EXIT "echo 'Bye!'"
 push_sig_handler EXIT "echo 1" HANDLER

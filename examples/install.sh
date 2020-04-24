@@ -4,7 +4,7 @@
 set -e
 
 # Source tidy.sh
-. "$(dirname '$0')/../tidy.sh"
+. "$(dirname "$0")/../tidy.sh"
 
 # Install a handler to say bye when the script finishes
 push_sig_handler EXIT "echo 'Bye!'"
@@ -36,5 +36,5 @@ cancel_sig_handler EXIT "${HANDLER_ID}"
 
 # Inform user that everything is OK
 echo "\
-Installation successful, the application \
+Installation was successful, the application \
 has been installed in ${INSTALL_DIR}"
