@@ -39,12 +39,14 @@ _pop_sig_handler()
 # Private
 _exec_sig_handlers()
 {
-    local pid nb_handlers
+    local pid nb_handlers ret results
     eval "nb_handlers=\${_NB_${1}_HANDLERS_${2}:-0}"
     while [ "${nb_handlers}" -gt 0 -a "${nb_handlers}" -gt "${3}" ]; do
-        _pop_sig_handler "${1}" "${2}" 1
+        _pop_sig_handler "${1}" "${2}" 1 && ret="${?}" || ret="${?}"
+        results="${results:+${results} }${ret}"
         nb_handlers=$((nb_handlers-1))
     done
+    [ -n "${4}" ] && eval "${4}=\${results}" || true
 }
 
 # Private
@@ -87,12 +89,11 @@ pop_sig_handler()
 # after the cancelled handler.
 # $1: signal (e.g INT, TERM, EXIT, ERR, ...)
 # $2: handler ID
-# Return: handler exit code
+# $3: (optional) a variable name where the results of executed handlers will be saved
 cancel_sig_handler()
 {
     local pid
     _get_shell_pid pid
-    _exec_sig_handlers "${1}" "${pid}" "${2}"
+    _exec_sig_handlers "${1}" "${pid}" "${2}" "${3}"
     _pop_sig_handler "${1}" "${pid}" 0
-    return "${?}"
 }
