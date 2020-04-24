@@ -66,7 +66,7 @@ push_sig_handler()
     _get_shell_pid pid
     trap "_exec_sig_handlers ${1} ${pid} 0" "${1}" || return 1
     eval "nb_handlers=\${_NB_${1}_HANDLERS_${pid}:-0}"
-    eval "_${1}_HANDLERS_${pid}_${nb_handlers}=\"${2}\""
+    eval "_${1}_HANDLERS_${pid}_${nb_handlers}=\${2}"
     eval "_NB_${1}_HANDLERS_${pid}=$((nb_handlers+1))"
     [ -n "${3}" ] && eval "${3}=$((nb_handlers+1))" || true
 }
