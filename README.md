@@ -10,12 +10,31 @@ provide a kind of exception handling mechanism which should improve
 the way you deal with errors in your shell scripts. This library is
 not tied with a particular shell and can be used with any POSIX shell.
 
+Installation
+============
+
+To install this shell library, type the following commands:
+
+```sh
+git clone https://github.com/montag451/tidysh.git tidysh
+cd tidysh
+mkdir build
+cd build
+cmake ../
+make install
+```
+
+It will install the library in `/usr/local/lib/tidysh`. If you want to
+change the install directory you can set the variables
+`CMAKE_INSTALL_PREFIX` and/or `CMAKE_INSTALL_LIBDIR`.
+
+You can also create RPM and DEB packages using the command `make package`.
+
 Usage
 =====
 
-To use this library, clone this repository and source `tidy.sh` in
-your shell script. Three functions should now be available in your
-script:
+To use this library, source it in your shell script. Three functions
+should now be available in your script:
 
   * `tidy_push`
   * `tidy_pop`
