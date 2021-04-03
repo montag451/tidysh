@@ -100,3 +100,12 @@ tidy_cancel()
     _tidy_exec "${1}" "${pid}" "${2}" "${3}"
     _tidy_pop "${1}" "${pid}" 0
 }
+
+# Quote a string. Useful to quote variable expansions when defining a
+# handler. It is the equivalent of ${parameter@Q} in bash but is
+# portable.
+# $1: the string to quote
+tidy_quote()
+{
+    echo "'$(echo "${1}" | sed "s/'/'\\\\''/g")'"
+}
