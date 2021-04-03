@@ -4,7 +4,7 @@ include(GNUInstallDirs)
 
 project(
   tidysh
-  VERSION 0.0.1
+  VERSION 0.0.2
   HOMEPAGE_URL https://github.com/montag451/tidysh
   DESCRIPTION "A small shell library to improve error handling in shell scripts"
   LANGUAGES NONE
