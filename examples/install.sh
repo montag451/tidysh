@@ -15,14 +15,14 @@ INSTALL_DIR=$(mktemp -d)
 # end of the install procedure if installation was successful.
 tidy_push\
     EXIT\
-    "echo 'Something has gone wrong'; rm -rf '${INSTALL_DIR}'"\
+    "echo 'Something has gone wrong'; rm -rf $(tidy_quote "${INSTALL_DIR}")"\
     HANDLER_ID
 
 # Create a temporary directory to do temporary things :)
 TMP_DIR=$(mktemp -d)
 # Install a handler to cleanup the temporary directory at the end of
 # the script no matter the outcome of the installation procedure
-tidy_push EXIT "echo 'Clean up the mess'; rm -rf '${TMP_DIR}'"
+tidy_push EXIT "echo 'Clean up the mess'; rm -rf $(tidy_quote "${TMP_DIR}")"
 
 # Do more stuff (more signal handlers may be installed)...
 
@@ -37,4 +37,4 @@ tidy_cancel EXIT "${HANDLER_ID}"
 # Inform user that everything is OK
 echo "\
 Installation was successful, the application \
-has been installed in ${INSTALL_DIR}"
+has been installed in $(tidy_quote "${INSTALL_DIR}")"
