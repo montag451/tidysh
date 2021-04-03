@@ -58,7 +58,6 @@ _tidy_get_shell_pid()
     # It's not possible to use $$ because subshell share this value with
     # their parent shell
     eval "${1}=$(sh -c 'echo ${PPID}')"
-    return "${?}"
 }
 
 # Push a signal handler on the handlers stack.
@@ -87,7 +86,6 @@ tidy_pop()
     local pid
     _tidy_get_shell_pid pid
     _tidy_pop "${1}" "${pid}" "${2:-0}"
-    return "${?}"
 }
 
 # Cancel a handler. Execute all the handlers that have been pushed
