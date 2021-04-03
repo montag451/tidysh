@@ -33,12 +33,13 @@ You can also create RPM and DEB packages using the command `make package`.
 Usage
 =====
 
-To use this library, source it in your shell script. Three functions
+To use this library, source it in your shell script. Four functions
 should now be available in your script:
 
   * `tidy_push`
   * `tidy_pop`
   * `tidy_cancel`
+  * `tidy_quote`
 
 These functions are documented in the source code of the library.
 
