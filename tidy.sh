@@ -19,6 +19,8 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+# shellcheck shell=dash
+
 # Private
 _tidy_pop()
 {
@@ -41,11 +43,12 @@ _tidy_exec()
 {
     local pid nb_handlers ret results
     eval "nb_handlers=\${_NB_${1}_HANDLERS_${2}:-0}"
-    while [ "${nb_handlers}" -gt 0 -a "${nb_handlers}" -gt "${3}" ]; do
+    while [ "${nb_handlers}" -gt 0 ] && [ "${nb_handlers}" -gt "${3}" ]; do
         _tidy_pop "${1}" "${2}" 1 && ret="${?}" || ret="${?}"
         results="${results:+${results} }${ret}"
         nb_handlers=$((nb_handlers-1))
     done
+    # shellcheck disable=SC2015
     [ -n "${4}" ] && eval "${4}=\${results}" || true
 }
 
@@ -66,10 +69,12 @@ tidy_push()
 {
     local pid nb_handlers
     _tidy_get_shell_pid pid
-    trap "_tidy_exec ${1} ${pid} 0" "${1}" || return 1
+    # shellcheck disable=SC2064
+    trap -- "_tidy_exec ${1} ${pid} 0" "${1}" || return 1
     eval "nb_handlers=\${_NB_${1}_HANDLERS_${pid}:-0}"
     eval "_${1}_HANDLERS_${pid}_${nb_handlers}=\${2}"
     eval "_NB_${1}_HANDLERS_${pid}=$((nb_handlers+1))"
+    # shellcheck disable=SC2015
     [ -n "${3}" ] && eval "${3}=$((nb_handlers+1))" || true
 }
 
